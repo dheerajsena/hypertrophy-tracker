@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>12-Week Hypertrophy Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f8f9fa;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #007BFF;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    input {
+      width: 100%;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+
+<h1>12-Week Hypertrophy Training Tracker</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Day</th>
+      <th>Exercise</th>
+      <th>Sets</th>
+      <th>Target Reps</th>
+      <th>Actual Reps</th>
+      <th>Weight Used (kg)</th>
+    </tr>
+  </thead>
+  <tbody id="exerciseTableBody"></tbody>
+</table>
+
+<script>
+  const plan = [
+    { day: "Monday", exercise: "Incline Machine Press", sets: 4, reps: 10 },
+    { day: "Monday", exercise: "Cable Crossover (low-to-high)", sets: 4, reps: 15 },
+    { day: "Monday", exercise: "Seated Dumbbell Shoulder Press", sets: 4, reps: 12 },
+    { day: "Monday", exercise: "Dumbbell Lateral Raises (Lean away)", sets: 4, reps: 15 },
+    { day: "Monday", exercise: "Arnold Press (light)", sets: 3, reps: 12 },
+    { day: "Monday", exercise: "Machine Shrugs", sets: 3, reps: 15 },
+    { day: "Tuesday", exercise: "Wide Lat Pulldown (Machine)", sets: 4, reps: 12 },
+    { day: "Tuesday", exercise: "Seated Chest-Supported Row", sets: 4, reps: 10 },
+    { day: "Tuesday", exercise: "Face Pulls", sets: 3, reps: 15 },
+    { day: "Tuesday", exercise: "Seated Dumbbell Curls", sets: 3, reps: 12 },
+    { day: "Tuesday", exercise: "Plank Variations", sets: 3, reps: "1 min" },
+    { day: "Wednesday", exercise: "Pilates + Pose Practice", sets: "-", reps: "-" },
+    { day: "Wednesday", exercise: "Vacuum Holds", sets: 3, reps: "30 sec" },
+    { day: "Thursday", exercise: "Leg Press (Low Weight)", sets: 3, reps: 12 },
+    { day: "Thursday", exercise: "Seated Leg Curl", sets: 3, reps: 12 },
+    { day: "Thursday", exercise: "Standing Calf Raises", sets: 3, reps: 15 },
+    { day: "Thursday", exercise: "Glute Kickbacks (Cable)", sets: 3, reps: 15 },
+    { day: "Thursday", exercise: "Cable Pallof Press", sets: 3, reps: 10 },
+    { day: "Thursday", exercise: "Bird-Dogs (on mat)", sets: 3, reps: 12 },
+    { day: "Friday", exercise: "EZ Bar Curls (Seated)", sets: 3, reps: 10 },
+    { day: "Friday", exercise: "Cable Rope Hammer Curl", sets: 3, reps: 12 },
+    { day: "Friday", exercise: "Overhead Cable Tricep Extension", sets: 3, reps: 12 },
+    { day: "Friday", exercise: "Reverse-Grip Tricep Pushdowns", sets: 3, reps: 15 },
+    { day: "Friday", exercise: "Dumbbell Concentration Curl + Dips", sets: 3, reps: 10 },
+    { day: "Saturday", exercise: "Sauna + Mobility + Light Yoga", sets: "-", reps: "-" },
+    { day: "Sunday", exercise: "Rest or 6km walk", sets: "-", reps: "-" }
+  ];
+
+  const tableBody = document.getElementById("exerciseTableBody");
+
+  plan.forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${item.day}</td>
+      <td>${item.exercise}</td>
+      <td>${item.sets}</td>
+      <td>${item.reps}</td>
+      <td><input type="text" placeholder="e.g. 10/12/10" /></td>
+      <td><input type="text" placeholder="e.g. 30kg" /></td>
+    `;
+    tableBody.appendChild(row);
+  });
+</script>
+
+</body>
+</html>
