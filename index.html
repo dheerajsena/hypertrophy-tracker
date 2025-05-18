@@ -6,54 +6,174 @@
   <title>Workout Tracker</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Chart.js for graphs -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg: #121212;
-      --card: #1E1E1E;
+      --bg: #FFFFFF;
+      --card-bg: #F8FAFC;
       --primary: #E53935;
-      --accent: #FFFFFF;
-      --text: #E0E0E0;
-      --muted: #A0A0A0;
+      --text: #1F2937;
+      --muted: #6B7280;
+      --border: #E5E7EB;
       --radius: 8px;
+      --shadow: rgba(0,0,0,0.05);
     }
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
-    header { padding:16px; text-align:center; background:var(--card); }
-    header h1 { color:var(--primary); font-size:1.5rem; }
-    main { padding:16px; }
-    .exercise-card { background:var(--card); border-radius:var(--radius); margin-bottom:12px; padding:12px; }
-    .exercise-card h2 { font-size:1.1rem; color:var(--accent); }
-    .exercise-card .details { display:flex; gap:8px; margin:8px 0; }
-    .exercise-card label { flex:1; font-size:0.9rem; color:var(--muted); }
-    .exercise-card input { flex:1; padding:8px; border-radius:4px; border:none; background:#2a2a2a; color:var(--text); }
-    .btn { display:inline-block; padding:10px 16px; background:var(--primary); color:var(--accent); text-align:center; border:none; border-radius:var(--radius); cursor:pointer; margin-top:12px; }
-
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: var(--card-bg);
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 2px 4px var(--shadow);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    main {
+      flex: 1;
+      padding: 16px;
+    }
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px var(--shadow);
+      margin-bottom: 16px;
+      padding: 16px;
+    }
+    .exercise-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .details label {
+      flex: 0 0 80px;
+      align-self: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .details input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: var(--text);
+      background: #FFF;
+    }
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .btn {
+      flex: 1;
+      padding: 14px 0;
+      background: var(--primary);
+      color: #FFF;
+      text-align: center;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: darken(var(--primary), 10%);
+    }
     /* Dashboard Modal */
-    .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; }
-    .modal-content { background:var(--card); padding:16px; border-radius:var(--radius); width:90%; max-width:500px; max-height:90%; overflow:auto; }
-    .modal-close { float:right; cursor:pointer; color:var(--muted); font-size:1.2rem; }
-
-    /* Responsive */
-    @media (min-width:600px) { .details { flex-wrap:nowrap; } }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      max-width: 500px;
+      width: 100%;
+      max-height: 90%;
+      overflow-y: auto;
+      padding: 16px;
+      position: relative;
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+    .modal-close {
+      position: absolute;
+      top: 12px; right: 12px;
+      font-size: 1.25rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .modal header {
+      margin-bottom: 12px;
+    }
+    .modal header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--text);
+    }
+    .modal select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-top: 8px;
+    }
+    @media (min-width: 600px) {
+      .btn { flex: 0 0 auto; width: auto; }
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>Workout Tracker</h1>
+    <p>Today is <span id="todayName"></span></p>
   </header>
   <main>
     <div id="exerciseList"></div>
-    <button class="btn" id="submitBtn">Submit Today's Log</button>
-    <button class="btn" id="viewDashboard">View Dashboard</button>
+    <div class="btn-group">
+      <button class="btn" id="submitBtn">Submit Today's Log</button>
+      <button class="btn" id="viewDashboard">View Dashboard</button>
+    </div>
   </main>
 
   <!-- Dashboard Modal -->
   <div class="modal" id="dashboardModal">
     <div class="modal-content">
       <span class="modal-close" id="closeModal">&times;</span>
-      <h2>Progress Dashboard</h2>
+      <header><h2>Progress Dashboard</h2></header>
       <select id="viewSelect">
         <option value="week">Week View</option>
         <option value="month">Month View</option>
@@ -63,7 +183,7 @@
   </div>
 
   <script>
-    // Exercise plan
+    // Plan definition
     const plan = {
       Monday: ["Incline Machine Press","Cable Crossover (low-to-high)","Seated Dumbbell Shoulder Press","Dumbbell Lateral Raises","Arnold Press","Machine Shrugs"],
       Tuesday: ["Wide Lat Pulldown","Seated Chest-Supported Row","Face Pulls","Seated Dumbbell Curls","Plank Variations"],
@@ -74,65 +194,81 @@
       Sunday: ["Rest or 6km Walk"]
     };
 
-    // Utilities
-    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-    const listEl = document.getElementById('exerciseList');
+    // Detect today
+    const today = new Date().toLocaleDateString('en-US',{weekday:'long'});
+    document.getElementById('todayName').textContent = today;
 
+    // Render today's exercises
     function renderExercises() {
-      listEl.innerHTML = '';
-      (plan[today] || []).forEach(ex => {
-        const card = document.createElement('div'); card.className='exercise-card';
+      const container = document.getElementById('exerciseList');
+      container.innerHTML = '';
+      (plan[today]||[]).forEach(ex => {
+        const card = document.createElement('div');
+        card.className = 'exercise-card';
         card.innerHTML = `
           <h2>${ex}</h2>
           <div class="details">
-            <label>Sets/Reps</label><input type="text" id="rep_${ex}" placeholder="e.g. 4x12" />
+            <label for="rep_${ex}">Sets/Reps</label><input id="rep_${ex}" type="text" placeholder="e.g. 4x12" />
           </div>
           <div class="details">
-            <label>Weight (kg)</label><input type="text" id="wt_${ex}" placeholder="e.g. 30" />
+            <label for="wt_${ex}">Weight (kg)</label><input id="wt_${ex}" type="text" placeholder="e.g. 30" />
           </div>
         `;
-        listEl.appendChild(card);
+        container.appendChild(card);
       });
     }
 
-    // Data persistence
+    // Save log to localStorage
     function saveLog() {
       const logs = JSON.parse(localStorage.getItem('workoutLogs')||'{}');
-      logs[today] = (plan[today]||[]).map(ex => ({
-        exercise: ex,
-        reps: document.getElementById(`rep_${ex}`).value,
-        weight: document.getElementById(`wt_${ex}`).value
+      logs[today] = (plan[today]||[]).map(ex => ({ exercise: ex,
+        reps: document.getElementById(`rep_${ex}`).value || '-',
+        weight: document.getElementById(`wt_${ex}`).value || '-'
       }));
       localStorage.setItem('workoutLogs', JSON.stringify(logs));
-      alert('Saved for ' + today);
+      alert(`Saved your ${today} workout!`);
     }
 
-    // Dashboard
+    // Dashboard modal
     const modal = document.getElementById('dashboardModal');
     const chartCtx = document.getElementById('progressChart').getContext('2d');
     let progressChart;
 
-    function openDashboard() {
-      modal.style.display='flex';
-      renderChart('week');
-    }
+    function openDashboard() { modal.style.display='flex'; renderChart(); }
     function closeDashboard() { modal.style.display='none'; }
 
-    function renderChart(view) {
+    function renderChart() {
+      const view = document.getElementById('viewSelect').value;
       const logs = JSON.parse(localStorage.getItem('workoutLogs')||'{}');
-      const labels = Object.keys(logs).filter(d=>d).slice(-7);
+      const dates = Object.keys(logs);
+      // Filter by last 7 or last 30
+      const sliceCount = view==='week'?7:30;
+      const labels = dates.slice(-sliceCount);
       const data = labels.map(d=> logs[d].length );
+
       if(progressChart) progressChart.destroy();
       progressChart = new Chart(chartCtx, {
-        type:'line', data:{ labels, datasets:[{ label:'Exercises Count', data, borderColor:var('--primary'), fill:false }] },
-        options:{ scales:{ y:{ beginAtZero:true } } }
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Exercises Completed',
+            data,
+            borderColor: '#E53935',
+            backgroundColor: 'rgba(229,57,53,0.2)',
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: { scales: { y: { beginAtZero:true } } }
       });
     }
 
+    // Event listeners
     document.getElementById('submitBtn').addEventListener('click', saveLog);
     document.getElementById('viewDashboard').addEventListener('click', openDashboard);
     document.getElementById('closeModal').addEventListener('click', closeDashboard);
-    document.getElementById('viewSelect').addEventListener('change', e=>renderChart(e.target.value));
+    document.getElementById('viewSelect').addEventListener('change', renderChart);
 
     // Init
     renderExercises();
