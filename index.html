@@ -3,31 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dheeraj's Fitness Tracker</title>
-  <!-- Google Font -->
+  <title>Dheeraj's 12-Week Hypertrophy Tracker</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     html, body { touch-action: manipulation; }
     :root {
-      --bg: #FFFFFF;
-      --card-bg: #F8FAFC;
-      --primary: #E53935;
-      --text: #1F2937;
-      --muted: #6B7280;
-      --border: #E5E7EB;
-      --radius: 10px;
-      --shadow: rgba(0,0,0,0.05);
-      --active-bg: rgba(229,57,53,0.1);
+      --bg: #FFFFFF; --card-bg: #F8FAFC; --primary: #E53935;
+      --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+      --radius: 10px; --shadow: rgba(0,0,0,0.05); --active-bg: rgba(229,57,53,0.1);
     }
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
     header { background:var(--card-bg); padding:20px; text-align:center; box-shadow:0 2px 4px var(--shadow); }
-    header h1 { color:var(--primary); font-size:2rem; margin-bottom:4px; }
-    header p { color:var(--muted); font-size:1rem; }
+    header h1 { color:var(--primary); font-size:2rem; }
+    header p { color:var(--muted); font-size:1rem; margin-top:4px; }
     nav { display:flex; flex-wrap:wrap; justify-content:center; background:var(--bg); padding:10px 0; border-bottom:1px solid var(--border); }
-    nav button { flex:0 1 auto; background:none; border:none; margin:4px; padding:10px 20px; font-size:1rem; color:var(--muted); cursor:pointer; border-radius:var(--radius) var(--radius) 0 0; transition:background .2s,color .2s; }
+    nav button { background:none; border:none; margin:4px; padding:10px 20px; font-size:1rem; color:var(--muted); cursor:pointer; border-radius:var(--radius) var(--radius) 0 0; transition:background .2s,color .2s; }
     nav button.active { background:var(--active-bg); color:var(--primary); }
     main { max-width:960px; margin:0 auto; padding:20px; }
     .card { background:var(--card-bg); border-radius:var(--radius); box-shadow:0 2px 8px var(--shadow); padding:20px; margin-bottom:20px; }
@@ -37,14 +29,25 @@
     .btn { display:inline-block; width:100%; padding:14px; background:var(--primary); color:#fff; border:none; border-radius:var(--radius); font-size:1rem; cursor:pointer; }
     .btn + .btn { margin-top:12px; }
     .form-row { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:16px; }
-    .form-row label { flex:0 0 120px; color:var(--muted); font-size:1rem; }
+    .form-row label { flex:0 0 100px; color:var(--muted); font-size:1rem; }
     .form-row input, .form-row select { flex:1; padding:12px; border:1px solid var(--border); border-radius:6px; font-size:1rem; }
-    .metrics-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:20px; margin-bottom:20px; }
+    .metrics-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:16px; margin-bottom:20px; }
     .metrics-item { background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:16px; text-align:center; }
     .metrics-item label { display:block; font-size:1rem; margin-bottom:8px; }
-    .metrics-item span { display:block; font-size:1.5rem; font-weight:600; color:var(--primary); }
-    .workout-card { margin-bottom:16px; }
-    .photo-thumb { width:80px; height:80px; object-fit:cover; margin:4px; border-radius:6px; border:1px solid var(--border); }
+    .metrics-item span { font-size:1.5rem; font-weight:600; color:var(--primary); }
+    table { width:100%; border-collapse:collapse; margin-top:12px; }
+    thead { background:var(--primary); color:#fff; }
+    thead th { padding:8px; font-size:0.9rem; text-align:left; }
+    tbody tr { background:#fff; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; margin-bottom:8px; border-radius:var(--radius); }
+    tbody td { padding:8px; font-size:0.9rem; }
+    @media(max-width:480px) {
+      header h1 { font-size:1.5rem; }
+      header p { font-size:0.9rem; }
+      nav button { padding:6px 12px; font-size:0.85rem; }
+      .form-row label { flex:0 0 80px; font-size:0.85rem; }
+      .form-row input, .form-row select { font-size:0.85rem; padding:8px; }
+      .metrics-item span { font-size:1.25rem; }
+    }
     @media(min-width:768px) {
       nav button { font-size:1.1rem; padding:12px 24px; }
       header h1 { font-size:2.5rem; }
@@ -56,7 +59,7 @@
 </head>
 <body>
   <header>
-    <h1>Dheeraj's Fitness Tracker</h1>
+    <h1>Dheeraj's 12-Week Hypertrophy Tracker</h1>
     <p id="today-name">Today is ...</p>
   </header>
   <nav>
@@ -117,10 +120,7 @@
     </section>
     <!-- Plan -->
     <section id="plan" class="tab">
-      <div class="card"><h2>Push Day</h2><table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Tempo</th></tr></thead><tbody id="push-plan"></tbody></table></div>
-      <div class="card"><h2>Pull Day</h2><table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Tempo</th></tr></thead><tbody id="pull-plan"></tbody></table></div>
-      <div class="card"><h2>Leg Day</h2><table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Tempo</th></tr></thead><tbody id="leg-plan"></tbody></table></div>
-      <div class="card"><h2>Volume Day</h2><table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Skipped</th></tr></thead><tbody id="vol-plan"></tbody></table></div>
+      <div id="plan-list"></div>
     </section>
     <!-- Nutrition -->
     <section id="nutrition" class="tab">
@@ -143,12 +143,11 @@
     </section>
   </main>
   <script>
-    // Initialize date
+    // Date
     const today=new Date().toLocaleDateString('en-US',{weekday:'long'});
     document.getElementById('today-name').textContent=`Today is ${today}`;
     // Keys
     const logsKey='workoutLogs', sportsKey='sportsLogs', metricsKey='metrics', manualKey='manual', intakeKey='intake', progressKey='progress';
-    
     // Tab nav
     document.querySelectorAll('nav button').forEach(btn=>btn.addEventListener('click',()=>{
       document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
@@ -156,139 +155,110 @@
       document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));
       document.getElementById(btn.dataset.tab).classList.add('active');
     }));
-
     // Quotes
     const quotes=["Consistency is key.","Push yourself.","No excuses.","Own your journey."];
     document.getElementById('daily-quote').textContent=quotes[Math.floor(Math.random()*quotes.length)];
-
-    // Metrics
-    function loadMetrics(){
-      const m=JSON.parse(localStorage.getItem(metricsKey)||'{}');
-      ['weight','fat','lean'].forEach(k=>{
-        if(m[k]) document.getElementById(`met-${k}`).textContent=m[k];
-        document.getElementById(`input-${k}`).value=m[k]||'';
+    // Load/Save Metrics
+    function loadMetrics(){ const m=JSON.parse(localStorage.getItem(metricsKey)||'{}'); ['weight','fat','lean','goal'].forEach(k=>{ if(m[k]) document.getElementById(`met-${k}`).textContent=m[k]; document.getElementById(`input-${k}`)?.value=m[k]||''; }); }
+    document.getElementById('save-metrics').addEventListener('click',()=>{ const m={ weight:document.getElementById('input-weight').value, fat:document.getElementById('input-fat').value, lean:document.getElementById('input-lean').value, goal:document.getElementById('input-goal')?.value||'+6kg' }; localStorage.setItem(metricsKey,JSON.stringify(m)); loadMetrics(); alert('Metrics updated'); });
+    // Training Plan
+    const fullPlan={
+      Monday: [
+        ['Incline Machine Press',4,'10','Focus on top of chest'],
+        ['Cable Crossover (low-to-high)',4,'15','Scoop motion'],
+        ['Seated Dumbbell Shoulder Press',4,'12','No spinal stress'],
+        ['Dumbbell Lateral Raises (Lean away)',4,'15','Adds delt roundness'],
+        ['Arnold Press (light)',3,'12','Shoulder cap aesthetics'],
+        ['Machine Shrugs',3,'15','Trap definition']
+      ],
+      Tuesday: [
+        ['Wide Lat Pulldown (Machine)',4,'12','Full stretch'],
+        ['Seated Chest-Supported Row',4,'10','Mid-back'],
+        ['Face Pulls',3,'15','Rear delts'],
+        ['Seated Dumbbell Curls',3,'12','Supinate'],
+        ['Plank Variations',3,'1 min','Core']
+      ],
+      Wednesday: [
+        ['Pilates Class',1,'',''],
+        ['Pose Practice',1,'','Shirt fit'],
+        ['Vacuum Holds',3,'30 sec','Core brace']
+      ],
+      Thursday: [
+        ['Leg Press Machine',4,'12','Controlled'],
+        ['Leg Extension',3,'15','Quad'],
+        ['Leg Curl Machine',3,'15','Hamstring'],
+        ['Cable Ab Crunch',3,'15',''],
+        ['Hanging Leg Raise',3,'12','Lower abs']
+      ],
+      Friday: [
+        ['EZ Bar Curls (Seated)',3,'10',''],
+        ['Cable Rope Hammer Curl',3,'12','Brachialis'],
+        ['Overhead Cable Tricep Extension',3,'12',''],
+        ['Reverse-Grip Tricep Pushdowns',3,'15',''],
+        ['Dumbbell Concentration Curl + Bench Dips',3,'10','Superset'],
+        ['Incline Machine Press (Finisher)',3,'12','Pump']
+      ],
+      Saturday: [
+        ['Sauna',1,'','Recovery'],
+        ['Mobility Drills',1,'',''],
+        ['Light Yoga',1,'','']
+      ],
+      Sunday: [
+        ['6km Walk',1,'','Active Recovery']
+      ]
+    };
+    // Render Plan
+    function renderPlan(){ const container=document.getElementById('plan-list'); container.innerHTML='';
+      ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].forEach(day => {
+        const arr=fullPlan[day]||[];
+        const card=document.createElement('div'); card.className='card';
+        card.innerHTML = `<h2>${day}</h2>
+          <table>
+            <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Notes</th></tr></thead>
+            <tbody>${arr.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]||''}</td></tr>`).join('')}</tbody>
+          </table>`;
+        container.appendChild(card);
       });
     }
-    document.getElementById('save-metrics').addEventListener('click',()=>{
-      const m={ weight:document.getElementById('input-weight').value, fat:document.getElementById('input-fat').value, lean:document.getElementById('input-lean').value };
-      localStorage.setItem(metricsKey,JSON.stringify(m)); loadMetrics(); alert('Metrics updated');
-    });
-
-    // Plan data
-    const fullPlan={
-      Push:[['Incline Press',4,'10-12'],['OHP',4,'8-10']],
-      Pull:[['Lat Pulldown',4,'10-12'],['Row',4,'10']],
-      Leg :[['Squat',4,'8-10'],['RDL',4,'10-12']],
-      Vol :[['Shoulder Press',4,'12'],['Curl',3,'12']]
-    };
-    function renderPlan(){
-      {for(const [k,arr] of Object.entries(fullPlan)){
-        const id=k.toLowerCase()+'-plan';
-        const tbody=document.getElementById(id); tbody.innerHTML='';
-        arr.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td></td>`; tbody.appendChild(tr); });
-      }}
-    }
-
-    // Workout
+    // Workout Rendering
     let manual=JSON.parse(localStorage.getItem(manualKey)||'{}');
-    function renderWorkout(){
-      const list=document.getElementById('workout-list'); list.innerHTML='';
-      const map={Monday:'Push',Tuesday:'Pull',Wednesday:'Vol',Thursday:'Leg',Friday:'Vol',Saturday:'Vol',Sunday:'Vol'};
-      const key=map[today]||'Push';
-      const arr=[...(manual[today]||[]), ...fullPlan[key]];
-      arr.forEach((ex,i)=>{
-        const [name,sets,reps]=ex;
+    function renderWorkout(){ const list=document.getElementById('workout-list'); list.innerHTML='';
+      const arr=[...(manual[today]||[]), ...fullPlan[today]];
+      arr.forEach((ex,i)=>{ const [name,sets,reps]=ex;
         const card=document.createElement('div'); card.className='card workout-card';
-        card.innerHTML=`
-          <h2>${name}</h2>
+        card.innerHTML = `<h2>${name}</h2>
           <div class="form-row"><label>Sets/Reps</label><input id="rep-${i}" placeholder="${sets}x${reps}"></div>
           <div class="form-row"><label>Weight</label><input id="wt-${i}" placeholder="kg"></div>
-          <div class="form-row"><label>Skipped</label><input type="checkbox" id="skip-${i}"></div>
-        `;
+          <div class="form-row"><label>Skipped</label><input type="checkbox" id="skip-${i}"></div>`;
         list.appendChild(card);
       });
     }
-    document.getElementById('toggle-manual').addEventListener('click',()=>{
-      const f=document.getElementById('manual-form'); f.style.display=f.style.display==='block'?'none':'block';
-    });
-    document.getElementById('add-manual').addEventListener('click',()=>{
-      const n=document.getElementById('man-name').value, r=document.getElementById('man-rep').value;
-      manual[today]=manual[today]||[]; manual[today].push([n,0,r]);
-      localStorage.setItem(manualKey,JSON.stringify(manual)); renderWorkout();
-    });
-    function saveWorkout(){
-      const logs=JSON.parse(localStorage.getItem(logsKey)||'{}'); logs[today]=[];
-      document.querySelectorAll('.workout-card').forEach((card,i)=>{
-        const name=card.querySelector('h2').textContent,
-              reps=card.querySelector(`#rep-${i}`).value,
-              wt=card.querySelector(`#wt-${i}`).value,
-              skip=card.querySelector(`#skip-${i}`).checked;
-        logs[today].push({exercise:name,reps,weight:wt,skipped:skip});
-      });
-      localStorage.setItem(logsKey,JSON.stringify(logs)); computeScore(); alert('Workout saved');
-    }
+    document.getElementById('toggle-manual').addEventListener('click',()=>{ const f=document.getElementById('manual-form'); f.style.display=f.style.display==='block'?'none':'block'; });
+    document.getElementById('add-manual').addEventListener('click',()=>{ const n=document.getElementById('man-name').value; const r=document.getElementById('man-rep').value; manual[today]=manual[today]||[]; manual[today].push([n,'',r]); localStorage.setItem(manualKey,JSON.stringify(manual)); renderWorkout(); });
+    function saveWorkout(){ const logs=JSON.parse(localStorage.getItem(logsKey)||'{}'); logs[today]=[];
+      document.querySelectorAll('.workout-card').forEach((card,i)=>{ const name=card.querySelector('h2').textContent; const reps=card.querySelector(`#rep-${i}`).value; const wt=card.querySelector(`#wt-${i}`).value; const skip=card.querySelector(`#skip-${i}`).checked; logs[today].push({exercise:name,reps,weight:wt,skipped:skip}); });
+      localStorage.setItem(logsKey,JSON.stringify(logs)); computeScore(); alert('Workout saved'); }
     document.getElementById('submit-workout').addEventListener('click',saveWorkout);
-
     // Sports
     let sports=JSON.parse(localStorage.getItem(sportsKey)||'[]');
-    function renderSports(){
-      const ul=document.getElementById('sport-list'); ul.innerHTML='';
-      sports.forEach(s=>{ const li=document.createElement('li'); li.textContent=`${s.name} - ${s.duration}m (${s.intensity})`; ul.appendChild(li); });
-    }
-    document.getElementById('add-sport').addEventListener('click',()=>{
-      const s={name:document.getElementById('sport-name').value,duration:document.getElementById('sport-duration').value,intensity:document.getElementById('sport-intensity').value};
-      sports.push(s); localStorage.setItem(sportsKey,JSON.stringify(sports)); renderSports();
-    });
-
+    function renderSports(){ const ul=document.getElementById('sport-list'); ul.innerHTML=''; sports.forEach(s=>{ const li=document.createElement('li'); li.textContent=`${s.name} - ${s.duration}m (${s.intensity})`; ul.appendChild(li); }); }
+    document.getElementById('add-sport').addEventListener('click',()=>{ const s={name:document.getElementById('sport-name').value,duration:document.getElementById('sport-duration').value,intensity:document.getElementById('sport-intensity').value}; sports.push(s); localStorage.setItem(sportsKey,JSON.stringify(sports)); renderSports(); });
     // Nutrition
-    document.getElementById('save-intake').addEventListener('click',()=>{
-      const ni={prot:document.getElementById('intake-prot').value,carb:document.getElementById('intake-carb').value,fat:document.getElementById('intake-fat').value};
-      localStorage.setItem(intakeKey,JSON.stringify(ni)); alert('Intake saved');
-    });
-    function renderNutrition(){['Breakfast:Whey+Banana','Lunch:Rice+Chicken','Snack:Paneer','Dinner:Roti+Sabzi'].forEach(m=>document.getElementById('meal-ideas').innerHTML+=`<li>${m}</li>`);} 
-
+    document.getElementById('save-intake').addEventListener('click',()=>{ const ni={prot:document.getElementById('intake-prot').value,carb:document.getElementById('intake-carb').value,fat:document.getElementById('intake-fat').value}; localStorage.setItem(intakeKey,JSON.stringify(ni)); alert('Intake saved'); });
+    function renderNutrition(){ ['Breakfast:Whey+Banana','Lunch:Rice+Chicken','Snack:Paneer','Dinner:Roti+Sabzi'].forEach(m=>document.getElementById('meal-ideas').innerHTML+=`<li>${m}</li>`); }
     // Recovery & Tracking
     ['Sauna:2x/week','Foam Roll:Daily','Wall Angels:5min'].forEach(r=>document.getElementById('recovery-list').innerHTML+=`<li>${r}</li>`);
     ['Weekly:Photos','Biweekly:Measure','Monthly:Scan','Daily:Log'].forEach(t=>document.getElementById('tracking-list').innerHTML+=`<li>${t}</li>`);
-
     // Score
-    function computeScore(){
-      const logs=JSON.parse(localStorage.getItem(logsKey)||'{}');
-      const ent=Object.entries(logs).slice(-7);
-      let done=0,planned=0;
-      ent.forEach(([d,arr])=>{ planned+=arr.length; done+=arr.filter(e=>!e.skipped).length; });
-      document.getElementById('met-score').textContent=(planned?Math.round(done/planned*100):0)+'%';
-    }
-
+    function computeScore(){ const logs=JSON.parse(localStorage.getItem(logsKey)||'{}'); const ent=Object.entries(logs).slice(-7); let done=0,planned=0; ent.forEach(([d,arr])=>{ planned+=arr.length; done+=arr.filter(e=>!e.skipped).length; }); document.getElementById('met-score').textContent=(planned?Math.round(done/planned*100):0)+'%'; }
     // Progress
     let progressData=JSON.parse(localStorage.getItem(progressKey)||'{}');
-    document.getElementById('save-progress').addEventListener('click',()=>{
-      const pd=progressData[today]||{photos:[],meas:[]};
-      const inp=document.getElementById('photo-input');
-      if(inp.files[0]){const r=new FileReader();r.onload=e=>{pd.photos.push(e.target.result);progressData[today]=pd;localStorage.setItem(progressKey,JSON.stringify(progressData));renderProgress();};r.readAsDataURL(inp.files[0]);}
-      pd.meas.push({date:today,chest:document.getElementById('meas-chest').value,waist:document.getElementById('meas-waist').value});
-      progressData[today]=pd;localStorage.setItem(progressKey,JSON.stringify(progressData));renderProgress();
-    });
-    function renderProgress(){
-      const pd=progressData[today]||{photos:[],meas:[]};
-      const gal=document.getElementById('photo-gallery');gal.innerHTML='';
-      pd.photos.forEach(src=>{const img=document.createElement('img');img.src=src;img.className='photo-thumb';gal.appendChild(img);});
-      const ml=document.getElementById('meas-list');ml.innerHTML='';pd.meas.forEach(m=>ml.innerHTML+=`<li>${m.date}: Chest ${m.chest}cm, Waist ${m.waist}cm</li>`);
-    }
-
+    document.getElementById('save-progress').addEventListener('click',()=>{ const pd=progressData[today]||{photos:[],meas:[]}; const inp=document.getElementById('photo-input'); if(inp.files[0]){ const r=new FileReader(); r.onload=e=>{ pd.photos.push(e.target.result); progressData[today]=pd; localStorage.setItem(progressKey,JSON.stringify(progressData)); renderProgress(); }; r.readAsDataURL(inp.files[0]); } pd.meas.push({date:today,chest:document.getElementById('meas-chest').value,waist:document.getElementById('meas-waist').value}); progressData[today]=pd; localStorage.setItem(progressKey,JSON.stringify(progressData)); renderProgress(); });
+    function renderProgress(){ const pd=progressData[today]||{photos:[],meas:[]}; const gal=document.getElementById('photo-gallery'); gal.innerHTML=''; pd.photos.forEach(src=>{ const img=document.createElement('img'); img.src=src; img.className='photo-thumb'; gal.appendChild(img); }); const ml=document.getElementById('meas-list'); ml.innerHTML=''; pd.meas.forEach(m=>ml.innerHTML+=`<li>${m.date}: Chest ${m.chest}cm, Waist ${m.waist}cm</li>`); }
     // Chart
-    function renderProgressChart(){
-      const logs=JSON.parse(localStorage.getItem(logsKey)||'{}');
-      const view=document.getElementById('view-type').value;
-      const ent=Object.entries(logs).slice(-(view==='week'?7:30));
-      const labels=ent.map(e=>e[0]);
-      const data=ent.map(e=>e[1].length);
-      const ctx=document.getElementById('progress-chart').getContext('2d');
-      new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Workouts',data,borderColor:'var(--primary)',fill:false}]},options:{scales:{y:{beginAtZero:true}}}});
-    }
+    function renderProgressChart(){ const logs=JSON.parse(localStorage.getItem(logsKey)||'{}'); const view=document.getElementById('view-type').value; const ent=Object.entries(logs).slice(-(view==='week'?7:30)); const labels=ent.map(e=>e[0]); const data=ent.map(e=>e[1].length); const ctx=document.getElementById('progress-chart').getContext('2d'); new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Workouts',data,borderColor:'var(--primary)',fill:false}]},options:{scales:{y:{beginAtZero:true}}}}); }
     document.getElementById('view-type').addEventListener('change',renderProgressChart);
-
-    // Initialize All
+    // Initialize
     loadMetrics(); renderPlan(); renderWorkout(); renderSports(); renderNutrition(); computeScore(); renderProgressChart(); renderProgress();
   </script>
 </body>
