@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Full-Stack Fitness App</title>
-  <!-- Google Font -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Fitness App</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -19,41 +17,40 @@
       --radius: 8px;
       --shadow: rgba(0,0,0,0.05);
     }
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
-    header { background:var(--card-bg); padding:16px; box-shadow:0 2px 4px var(--shadow); text-align:center; }
-    header h1 { font-size:1.5rem; color:var(--primary); }
-    header p { color:var(--muted); font-size:0.9rem; margin-top:4px; }
-    nav { display:flex; overflow-x:auto; background:var(--bg); padding:8px; gap:8px; }
-    nav button { flex:0 0 auto; background:none; border:none; padding:8px 12px; font-size:0.9rem; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:color .2s,border-color .2s; }
-    nav button.active { color:var(--primary); border-color:var(--primary); }
-    main { max-width:480px; margin:0 auto; padding:12px; }
-    .card { background:var(--card-bg); border-radius:var(--radius); box-shadow:0 2px 8px var(--shadow); margin-bottom:12px; padding:12px; }
-    h2 { font-size:1rem; margin-bottom:8px; }
-    .form-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
-    .form-row label { flex:0 0 70px; color:var(--muted); font-size:0.85rem; }
-    .form-row input, .form-row select { flex:1; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; }
-    .btn-group { display:flex; gap:8px; margin-top:12px; }
-    .btn { flex:1; padding:12px; background:var(--primary); color:#fff; border:none; border-radius:var(--radius); font-size:0.9rem; cursor:pointer; }
-    .btn:active { opacity:0.8; }
-    table { width:100%; border-collapse:collapse; margin-bottom:12px; }
-    th, td { border:1px solid var(--border); padding:8px; text-align:left; font-size:0.8rem; }
-    th { background:var(--primary); color:#fff; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+    header { background: var(--card-bg); padding: 16px; text-align: center; box-shadow: 0 2px 4px var(--shadow); }
+    header h1 { color: var(--primary); font-size: 1.5rem; }
+    header p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+    nav { display: flex; overflow-x: auto; background: var(--bg); padding: 8px; border-bottom: 1px solid var(--border); }
+    nav button { flex: 0 0 auto; background: none; border: none; padding: 8px 12px; font-size: 0.9rem; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: color .2s, border-color .2s; }
+    nav button.active { color: var(--primary); border-color: var(--primary); }
+    main { max-width: 480px; margin: 0 auto; padding: 12px; }
+    .card { background: var(--card-bg); border-radius: var(--radius); box-shadow: 0 2px 8px var(--shadow); margin-bottom: 12px; padding: 12px; }
+    h2 { font-size: 1rem; margin-bottom: 8px; }
+    .btn { display: inline-block; width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius); font-size: 0.95rem; cursor: pointer; }
+    .btn + .btn { margin-top: 8px; }
+    .form-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .form-row label { flex: 0 0 80px; color: var(--muted); font-size: 0.85rem; }
+    .form-row input, .form-row select { flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+    th, td { border: 1px solid var(--border); padding: 8px; font-size: 0.8rem; }
+    th { background: var(--primary); color: #fff; }
     @media(max-width:480px) {
-      header h1 { font-size:1.25rem; }
-      nav button { padding:6px 8px; font-size:0.8rem; }
+      header h1 { font-size: 1.25rem; }
+      nav button { padding: 6px 8px; font-size: 0.8rem; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Full-Stack Fitness App</h1>
-    <p id="todayName"></p>
+    <h1>Fitness App</h1>
+    <p id="today-name">Today is ...</p>
   </header>
-  <nav>
+  <nav id="nav-bar">
     <button data-tab="dashboard" class="active">Dashboard</button>
     <button data-tab="workout">Workout</button>
-    <button data-tab="sports">Sport</button>
+    <button data-tab="sports">Sports</button>
     <button data-tab="plan">Plan</button>
     <button data-tab="nutrition">Nutrition</button>
     <button data-tab="recovery">Recovery</button>
@@ -62,189 +59,207 @@
   </nav>
   <main>
     <!-- Dashboard -->
-    <section id="dashboard" class="active">
+    <section id="dashboard" class="tab active">
       <div class="card">
-        <h2>Body Metrics & Score</n2>
+        <h2>Body Metrics & Score</h2>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
-          <div style="flex:1;text-align:center;"><strong>Weight</strong><div id="metricWeight">52.4kg</div></div>
-          <div style="flex:1;text-align:center;"><strong>Body Fat</strong><div id="metricFat">9.7%</div></div>
-          <div style="flex:1;text-align:center;"><strong>Lean Mass</strong><div id="metricLean">47.3kg</div></div>
-          <div style="flex:1;text-align:center;"><strong>Goal</strong><div id="metricGoal">+6kg</div></div>
-          <div style="flex:1;text-align:center;"><strong>Weekly Score</strong><div id="metricScore">0%</div></div>
+          <div style="flex:1;text-align:center;"><strong>Weight</strong><div id="met-weight">52.4kg</div></div>
+          <div style="flex:1;text-align:center;"><strong>Body Fat</strong><div id="met-fat">9.7%</div></div>
+          <div style="flex:1;text-align:center;"><strong>Lean Mass</strong><div id="met-lean">47.3kg</div></div>
+          <div style="flex:1;text-align:center;"><strong>Goal</strong><div id="met-goal">+6kg</div></div>
+          <div style="flex:1;text-align:center;"><strong>Score</strong><div id="met-score">0%</div></div>
         </div>
       </div>
       <div class="card">
         <h2>Quote of the Day</h2>
-        <p id="dailyQuote" style="font-style:italic;color:var(--muted)">Stay strong, stay consistent.</p>
+        <p id="daily-quote" style="font-style:italic;color:var(--muted)">Stay strong, stay consistent.</p>
       </div>
     </section>
-
     <!-- Workout -->
-    <section id="workout">
-      <div id="exerciseList"></div>
-      <div class="btn-group">
-        <button class="btn" id="submitLog">Submit Workout</button>
-      </div>
+    <section id="workout" class="tab">
+      <div id="workout-list"></div>
+      <button class="btn" id="submit-workout">Submit Workout</button>
     </section>
-
-    <!-- Sport -->
-    <section id="sports">
+    <!-- Sports -->
+    <section id="sports" class="tab">
       <div class="card">
         <h2>Log Sport Session</h2>
-        <div id="sportForm">
-          <div class="form-row"><label>Name</label><input id="sportName" placeholder="e.g. Basketball" /></div>
-          <div class="form-row"><label>Duration</label><input id="sportDuration" placeholder="minutes" /></div>
-          <div class="form-row"><label>Intensity</label><select id="sportIntensity"><option>Low</option><option>Medium</option><option>High</option></select></div>
-          <button class="btn" id="addSport">Add Sport</button>
-        </div>
-        <ul id="sportList"></ul>
+        <div class="form-row"><label>Name</label><input id="sport-name" placeholder="e.g. Basketball" /></div>
+        <div class="form-row"><label>Duration</label><input id="sport-duration" placeholder="minutes" type="number" /></div>
+        <div class="form-row"><label>Intensity</label><select id="sport-intensity"><option>Low</option><option>Medium</option><option>High</option></select></div>
+        <button class="btn" id="add-sport">Add Sport</button>
+        <ul id="sport-list"></ul>
       </div>
     </section>
-
     <!-- Plan -->
-    <section id="plan">
-      <div class="card"><h2>Push Day</h2>
-        <table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Tempo</th><th>Notes</th></tr></thead><tbody id="pushPlan"></tbody></table>
+    <section id="plan" class="tab">
+      <div class="card">
+        <h2>Push Day Plan</h2>
+        <table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Tempo</th></tr></thead><tbody id="push-plan"></tbody></table>
       </div>
-      <div class="card"><h2>Pull Day</h2>
-        <table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Tempo</th><th>Notes</th></tr></thead><tbody id="pullPlan"></tbody></table>
+      <div class="card">
+        <h2>Pull Day Plan</h2>
+        <table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Tempo</th></tr></thead><tbody id="pull-plan"></tbody></table>
       </div>
-      <div class="card"><h2>Leg Day</h2>
-        <table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Tempo</th><th>Notes</th></tr></thead><tbody id="legPlan"></tbody></table>
+      <div class="card">
+        <h2>Leg Day Plan</h2>
+        <table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Tempo</th></tr></thead><tbody id="leg-plan"></tbody></table>
       </div>
-      <div class="card"><h2>Volume Day</h2>
-        <table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Notes</th></tr></thead><tbody id="volPlan"></tbody></table>
+      <div class="card">
+        <h2>Volume Day Plan</h2>
+        <table><thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Notes</th></tr></thead><tbody id="vol-plan"></tbody></table>
       </div>
     </section>
-
     <!-- Nutrition -->
-    <section id="nutrition">
-      <div class="card"><h2>Macro Targets</h2><ul>
-        <li>Calories: 2400–2600 kcal</li>
-        <li>Protein: 110g</li>
-        <li>Carbs: 300–350g</li>
-        <li>Fats: 60–70g</li>
-      </ul></div>
-      <div class="card"><h2>Meal Ideas</h2><ul id="mealIdeas"></ul></div>
+    <section id="nutrition" class="tab">
+      <div class="card">
+        <h2>Macro Targets</n2>
+        <ul>
+          <li>Calories: 2400–2600 kcal</li>
+          <li>Protein: 110g</li>
+          <li>Carbs: 300–350g</li>
+          <li>Fats: 60–70g</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Meal Ideas</h2>
+        <ul id="meal-ideas"></ul>
+      </div>
     </section>
-
     <!-- Recovery -->
-    <section id="recovery">
-      <div class="card"><h2>Recovery Methods</h2><ul id="recoveryList"></ul></div>
+    <section id="recovery" class="tab">
+      <div class="card">
+        <h2>Recovery Methods</h2>
+        <ul id="recovery-list"></ul>
+      </div>
     </section>
-
     <!-- Tracking -->
-    <section id="tracking">
-      <div class="card"><h2>Tracking Cadence</h2><ul id="trackList"></ul></div>
+    <section id="tracking" class="tab">
+      <div class="card">
+        <h2>Tracking Cadence</h2>
+        <ul id="tracking-list"></ul>
+      </div>
     </section>
-
     <!-- Progress -->
-    <section id="progress">
-      <div class="card"><h2>Progress Chart</h2>
-        <select id="viewType"><option value="week">Week</option><option value="month">Month</option></select>
-        <canvas id="progressChart" style="margin-top:12px"></canvas>
+    <section id="progress" class="tab">
+      <div class="card">
+        <h2>Progress Chart</h2>
+        <select id="view-type"><option value="week">Week</option><option value="month">Month</option></select>
+        <canvas id="progress-chart"></canvas>
       </div>
     </section>
   </main>
-
   <script>
-    // Data
-    const fullPlan = {
-      Push: [
-        ['Incline Dumbbell Press',4,'10-12','3-1-2','Upper chest focus'],
-        ['Seated Overhead Press',4,'8-10','2-1-2','Dumbbells only'],
-        ['Cable Crossover',3,'12-15','2-1-2','Squeeze'],
-        ['Lateral Raises',4,'15','2-1-2','Dropset on last'],
-        ['Rope Pushdown',4,'12','2-0-2','Pause bottom'],
-        ['Overhead Ext',3,'12','2-0-2','Stretch']
-      ],
-      Pull: [
-        ['Lat Pulldown',4,'10-12','2-1-2','Full stretch'],
-        ['Chest Row',4,'10','3-1-2','Neutral grip'],
-        ['Dumbbell Row',3,'10/side','2-1-2','Controlled'],
-        ['EZ Curl',3,'10-12','2-1-2','Peak'],
-        ['Hammer Curl',3,'12','2-0-2','Brachialis'],
-        ['Leg Raise',3,'15','-','Core']
-      ],
-      Leg: [
-        ['Squat',4,'8-10','3-1-2','Depth control'],
-        ['RDL',4,'10-12','3-0-3','Hamstring'],
-        ['Lunges',3,'20 steps','-','Walking'],
-        ['Leg Press',3,'15','-','Glute'],
-        ['Kickbacks',3,'15/leg','-','Cable'],
-        ['Crunch',3,'15','Slow','Decline']
-      ],
-      Vol: [
-        ['Shoulder Press',4,'12','-','Full range'],
-        ['Cable Lateral',4,'15','-','Alt arms'],
-        ['Preacher Curl',3,'12','-','Machine'],
-        ['Concentration',3,'10','-','Peak'],
-        ['Skull Crushers',3,'10','-','Elbows'],
-        ['Tricep Push',3,'15','-','Dropset']
-      ]
-    };
-    const today = new Date().toLocaleDateString('en-US',{weekday:'long'});
+    // Tab navigation
+    document.querySelectorAll('nav button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('main .tab').forEach(s => s.classList.remove('active'));
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Date and quote
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    document.getElementById('today-name').textContent = `Today is ${today}`;
+
+    // Data stores
     const logsKey = 'workoutLogs';
     const sportsKey = 'sportsLogs';
-    // Tab logic
-    document.querySelectorAll('nav button').forEach(btn=>btn.addEventListener('click',()=>{
-      document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
-      document.getElementById(btn.dataset.tab).classList.add('active');
-    }));
-    // Header
-    document.getElementById('todayName').textContent = `Today is ${today}`;
-    // Render workout
-    function renderExercises(){
-      const list = document.getElementById('exerciseList'); list.innerHTML = '';
-      const exercises = fullPlan[{Monday:'Push',Tuesday:'Pull',Wednesday:'Vol',Thursday:'Leg',Friday:'Vol',Saturday:'Vol',Sunday:'Vol'}[today]] || [];
-      exercises.forEach(ex=>{
-        const card = document.createElement('div'); card.className='card';
-        card.innerHTML = `<h2>${ex[0]}</h2>
-          <div>Sets: ${ex[1]} | Reps: ${ex[2]}</div>`;
-        list.appendChild(card);
+
+    // Full plan data
+    const fullPlan = {
+      Push: [ ['Incline Press',4,'10-12','3-1-2'], ['OHP',4,'8-10','2-1-2'] ],
+      Pull: [ ['Lat Pulldown',4,'10-12','2-1-2'], ['Row',4,'10','3-1-2'] ],
+      Leg:  [ ['Squat',4,'8-10','3-1-2'], ['RDL',4,'10-12','3-0-3'] ],
+      Vol:  [ ['Shoulder Press',4,'12'], ['Curl',3,'12'] ]
+    };
+
+    // Render functions
+    function renderDashboard() {
+      computeScore();
+    }
+    function renderWorkout() {
+      const container = document.getElementById('workout-list');
+      container.innerHTML = '';
+      const dayKey = ({Monday:'Push',Tuesday:'Pull',Wednesday:'Vol',Thursday:'Leg',Friday:'Vol',Saturday:'Vol',Sunday:'Vol'})[today];
+      const exercises = fullPlan[dayKey] || [];
+      exercises.forEach(([name,sets,reps,tempo]) => {
+        const card = document.createElement('div'); card.className = 'card';
+        card.innerHTML = `<h2>${name}</h2>
+          <div class="form-row"><label>Sets/Reps</label><input id="rep-${name}" placeholder="${sets}x${reps}" /></div>
+          <div class="form-row"><label>Weight</label><input id="wt-${name}" placeholder="kg" /></div>
+          <div class="form-row"><label>Tempo</label><input value="${tempo||''}" readonly /></div>`;
+        container.appendChild(card);
       });
     }
-    // Sport
-    let sports = JSON.parse(localStorage.getItem(sportsKey)||'[]');
-    function renderSports(){ const ul = document.getElementById('sportList'); ul.innerHTML='';
-      sports.forEach((s,i)=>{ const li=document.createElement('li'); li.textContent=`${s.name}: ${s.duration}m (${s.intensity})`; ul.appendChild(li); }); }
-    document.getElementById('addSport').onclick = ()=>{
-      const s={ name:document.getElementById('sportName').value, duration:document.getElementById('sportDuration').value, intensity:document.getElementById('sportIntensity').value };
-      sports.push(s); localStorage.setItem(sportsKey,JSON.stringify(sports)); renderSports();
-    };
-    // Save Workout and Score
-    function computeScore(){ const logs=JSON.parse(localStorage.getItem(logsKey)||'{}'); const last7=Object.entries(logs).slice(-7);
-      let done=0, planned=0; last7.forEach(([day,arr])=>{ planned+=arr.length; done+=arr.filter(e=>!e.skipped).length; });
-      const score = planned?Math.round(done/planned*100):0; document.getElementById('metricScore').textContent=`${score}%`; }
-    document.getElementById('submitLog').onclick = ()=>{
-      // placeholder: log fullPlan count
+    function saveWorkout() {
+      const dayKey = ({Monday:'Push',Tuesday:'Pull',Wednesday:'Vol',Thursday:'Leg',Friday:'Vol',Saturday:'Vol',Sunday:'Vol'})[today];
+      const entries = fullPlan[dayKey] || [];
       const logs = JSON.parse(localStorage.getItem(logsKey)||'{}');
-      const arr = fullPlan[{Monday:'Push',Tuesday:'Pull',Wednesday:'Vol',Thursday:'Leg',Friday:'Vol',Saturday:'Vol',Sunday:'Vol'}[today]] || [];
-      logs[today] = arr.map(ex=>({ exercise:ex[0], skipped:false }));
-      localStorage.setItem(logsKey,JSON.stringify(logs)); computeScore(); alert('Workout saved!');
-    };
-    // Render plan tables
-    function renderPlan(){ for(const [key,array] of Object.entries(fullPlan)){
-      const id = key.toLowerCase().substring(0, key==='Vol'?'volPlan':key+'Plan');
-      const tbody = document.getElementById(id);
-      array.forEach(r=>{ const tr=document.createElement('tr'); r.forEach(c=>tr.innerHTML+=`<td>${c}</td>`); tbody.appendChild(tr); }); }
+      logs[today] = entries.map(([name]) => ({ exercise: name, reps: document.getElementById(`rep-${name}`).value, weight: document.getElementById(`wt-${name}`).value }));
+      localStorage.setItem(logsKey, JSON.stringify(logs));
+      alert('Workout saved!');
+      computeScore();
     }
-    // Render meals, recovery, tracking
-    const meals=[['Breakfast','Whey+Banana'],['Lunch','Rice+Chicken'],['Snack','Paneer'],['Dinner','Roti+Sabzi']];
-    function renderMeals(){ const ul=document.getElementById('mealIdeas'); meals.forEach(m=>{ const li=document.createElement('li'); li.textContent=`${m[0]}: ${m[1]}`; ul.appendChild(li);} ); }
-    const rec=[['Sauna','2x/week'],['Foam','Daily'],['Wall Angels','5min']];
-    function renderRecovery(){ const ul=document.getElementById('recoveryList'); rec.forEach(r=>{ const li=document.createElement('li'); li.textContent=`${r[0]} - ${r[1]}`; ul.appendChild(li);} ); }
-    const track=[['Weekly','Photos+Weight'],['Biweekly','Measurements'],['Monthly','Scan'],['Daily','Logbook']];
-    function renderTracking(){ const ul=document.getElementById('trackList'); track.forEach(t=>{ const li=document.createElement('li'); li.textContent=`${t[0]}: ${t[1]}`; ul.appendChild(li);} ); }
-    // Progress chart
-    function renderChart(){ const view=document.getElementById('viewType').value; const logs=JSON.parse(localStorage.getItem(logsKey)||'{}');
-      const entries=Object.entries(logs).slice(-(view==='week'?7:30)); const labels=entries.map(e=>e[0]); const data=entries.map(e=>e[1].length);
-      const ctx=document.getElementById('progressChart').getContext('2d'); new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Logs',data,borderColor:'var(--primary)',fill:false}]},options:{scales:{y:{beginAtZero:true}}}});
+    function renderSports() {
+      const list = JSON.parse(localStorage.getItem(sportsKey)||'[]');
+      const ul = document.getElementById('sport-list'); ul.innerHTML = '';
+      list.forEach(s => { const li = document.createElement('li'); li.textContent = `${s.name} - ${s.duration}m (${s.intensity})`; ul.appendChild(li); });
     }
-    // Init
-    renderExercises(); renderSports(); computeScore(); renderPlan(); renderMeals(); renderRecovery(); renderTracking(); renderChart(); document.getElementById('viewType').onchange=renderChart;
+    function addSport() {
+      const list = JSON.parse(localStorage.getItem(sportsKey)||'[]');
+      const s = { name: document.getElementById('sport-name').value, duration: document.getElementById('sport-duration').value, intensity: document.getElementById('sport-intensity').value };
+      list.push(s); localStorage.setItem(sportsKey, JSON.stringify(list)); renderSports();
+    }
+    function renderPlan() {
+      [['push-plan','Push'],['pull-plan','Pull'],['leg-plan','Leg'],['vol-plan','Vol']].forEach(([id,key]) => {
+        const tbody = document.getElementById(id); tbody.innerHTML = '';
+        fullPlan[key].forEach(([name,sets,reps,tempo]) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${name}</td><td>${sets}</td><td>${reps}</td><td>${tempo||''}</td>`;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+    function renderNutrition() {
+      const meals = ['Breakfast: Whey+Banana','Lunch: Rice+Chicken','Snack: Paneer','Dinner: Roti+Sabzi'];
+      const ul = document.getElementById('meal-ideas'); meals.forEach(m=>{const li=document.createElement('li');li.textContent=m;ul.appendChild(li);});
+    }
+    function renderRecovery() {
+      const rec = ['Sauna:2x/week','Foam Roll:Daily','Wall Angels:5min'];
+      const ul = document.getElementById('recovery-list'); rec.forEach(r=>{const li=document.createElement('li');li.textContent=r;ul.appendChild(li);});
+    }
+    function renderTracking() {
+      const trk = ['Weekly:Photos','Biweekly:Measure','Monthly:Scan','Daily:Log'];
+      const ul = document.getElementById('tracking-list'); trk.forEach(t=>{const li=document.createElement('li');li.textContent=t;ul.appendChild(li);});
+    }
+    function computeScore() {
+      const logs = JSON.parse(localStorage.getItem(logsKey)||'{}');
+      const entries = Object.entries(logs).slice(-7);
+      let done = 0, planned = 0;
+      entries.forEach(([day,arr]) => { planned += arr.length; done += arr.filter(e => e.reps && e.weight).length; });
+      const score = planned ? Math.round(done/planned*100) : 0;
+      document.getElementById('met-score').textContent = score + '%';
+    }
+    function renderProgress() {
+      const logs = JSON.parse(localStorage.getItem(logsKey)||'{}');
+      const view = document.getElementById('view-type').value;
+      const entries = Object.entries(logs).slice(-(view==='week'?7:30));
+      const labels = entries.map(e=>e[0]);
+      const data = entries.map(e=>e[1].length);
+      const ctx = document.getElementById('progress-chart').getContext('2d');
+      new Chart(ctx, { type:'line', data:{ labels, datasets:[{ label:'Workouts', data, borderColor:'var(--primary)', fill:false }] }, options:{ scales:{ y:{ beginAtZero:true } } } });
+    }
+
+    // Event Listeners
+    document.getElementById('submit-workout').onclick = saveWorkout;
+    document.getElementById('add-sport').onclick = addSport;
+    document.getElementById('view-type').onchange = renderProgress;
+
+    // Initialize
+    renderDashboard(); renderWorkout(); renderSports(); renderPlan(); renderNutrition(); renderRecovery(); renderTracking(); renderProgress();
   </script>
 </body>
 </html>
