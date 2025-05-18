@@ -3,176 +3,139 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>12-Week Hypertrophy Tracker</title>
+  <title>Workout Tracker</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Chart.js for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg-color: #f0f2f5;
-      --card-bg: #ffffff;
-      --primary: #3b82f6;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --radius: 0.5rem;
-      --shadow: rgba(0, 0, 0, 0.05);
+      --bg: #121212;
+      --card: #1E1E1E;
+      --primary: #E53935;
+      --accent: #FFFFFF;
+      --text: #E0E0E0;
+      --muted: #A0A0A0;
+      --radius: 8px;
     }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text);
-      line-height: 1.6;
-      padding: 1rem;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .table-wrapper {
-      overflow-x: auto;
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 8px var(--shadow);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 800px;
-    }
-    thead {
-      background-color: var(--primary);
-      color: #fff;
-    }
-    th, td {
-      padding: 1rem;
-      border-bottom: 1px solid var(--border);
-      text-align: center;
-    }
-    th {
-      font-size: 0.9rem;
-      font-weight: 600;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    tbody tr:nth-child(even) {
-      background-color: #fafafa;
-    }
-    tbody tr:hover {
-      background-color: #f3f4f6;
-    }
-    input {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.2s;
-    }
-    input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-    }
-    @media (max-width: 768px) {
-      th, td {
-        padding: 0.75rem;
-        font-size: 0.85rem;
-      }
-      header h1 {
-        font-size: 1.5rem;
-      }
-    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
+    header { padding:16px; text-align:center; background:var(--card); }
+    header h1 { color:var(--primary); font-size:1.5rem; }
+    main { padding:16px; }
+    .exercise-card { background:var(--card); border-radius:var(--radius); margin-bottom:12px; padding:12px; }
+    .exercise-card h2 { font-size:1.1rem; color:var(--accent); }
+    .exercise-card .details { display:flex; gap:8px; margin:8px 0; }
+    .exercise-card label { flex:1; font-size:0.9rem; color:var(--muted); }
+    .exercise-card input { flex:1; padding:8px; border-radius:4px; border:none; background:#2a2a2a; color:var(--text); }
+    .btn { display:inline-block; padding:10px 16px; background:var(--primary); color:var(--accent); text-align:center; border:none; border-radius:var(--radius); cursor:pointer; margin-top:12px; }
+
+    /* Dashboard Modal */
+    .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; }
+    .modal-content { background:var(--card); padding:16px; border-radius:var(--radius); width:90%; max-width:500px; max-height:90%; overflow:auto; }
+    .modal-close { float:right; cursor:pointer; color:var(--muted); font-size:1.2rem; }
+
+    /* Responsive */
+    @media (min-width:600px) { .details { flex-wrap:nowrap; } }
   </style>
 </head>
 <body>
   <header>
-    <h1>12-Week Hypertrophy Training Tracker</h1>
-    <p style="color: var(--muted);">Track your workouts live and stay on top of your gains 💪</p>
+    <h1>Workout Tracker</h1>
   </header>
+  <main>
+    <div id="exerciseList"></div>
+    <button class="btn" id="submitBtn">Submit Today's Log</button>
+    <button class="btn" id="viewDashboard">View Dashboard</button>
+  </main>
 
-  <div class="container">
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Day</th>
-            <th>Exercise</th>
-            <th>Sets</th>
-            <th>Target Reps</th>
-            <th>Actual Reps</th>
-            <th>Weight (kg)</th>
-          </tr>
-        </thead>
-        <tbody id="exerciseTableBody"></tbody>
-      </table>
+  <!-- Dashboard Modal -->
+  <div class="modal" id="dashboardModal">
+    <div class="modal-content">
+      <span class="modal-close" id="closeModal">&times;</span>
+      <h2>Progress Dashboard</h2>
+      <select id="viewSelect">
+        <option value="week">Week View</option>
+        <option value="month">Month View</option>
+      </select>
+      <canvas id="progressChart" style="margin-top:16px;"></canvas>
     </div>
   </div>
 
   <script>
-    const plan = [
-      { day: "Monday", exercise: "Incline Machine Press", sets: 4, reps: 10 },
-      { day: "Monday", exercise: "Cable Crossover (low-to-high)", sets: 4, reps: 15 },
-      { day: "Monday", exercise: "Seated Dumbbell Shoulder Press", sets: 4, reps: 12 },
-      { day: "Monday", exercise: "Dumbbell Lateral Raises (Lean away)", sets: 4, reps: 15 },
-      { day: "Monday", exercise: "Arnold Press (light)", sets: 3, reps: 12 },
-      { day: "Monday", exercise: "Machine Shrugs", sets: 3, reps: 15 },
+    // Exercise plan
+    const plan = {
+      Monday: ["Incline Machine Press","Cable Crossover (low-to-high)","Seated Dumbbell Shoulder Press","Dumbbell Lateral Raises","Arnold Press","Machine Shrugs"],
+      Tuesday: ["Wide Lat Pulldown","Seated Chest-Supported Row","Face Pulls","Seated Dumbbell Curls","Plank Variations"],
+      Wednesday: ["Pilates + Pose Practice","Vacuum Holds"],
+      Thursday: ["Leg Press","Seated Leg Curl","Standing Calf Raises","Glute Kickbacks","Cable Pallof Press","Bird-Dogs"],
+      Friday: ["EZ Bar Curls","Cable Rope Hammer Curl","Overhead Tricep Extension","Reverse-Grip Pushdowns","Concentration Curl + Dips"],
+      Saturday: ["Sauna + Mobility + Yoga"],
+      Sunday: ["Rest or 6km Walk"]
+    };
 
-      { day: "Tuesday", exercise: "Wide Lat Pulldown (Machine)", sets: 4, reps: 12 },
-      { day: "Tuesday", exercise: "Seated Chest-Supported Row", sets: 4, reps: 10 },
-      { day: "Tuesday", exercise: "Face Pulls", sets: 3, reps: 15 },
-      { day: "Tuesday", exercise: "Seated Dumbbell Curls", sets: 3, reps: 12 },
-      { day: "Tuesday", exercise: "Plank Variations", sets: 3, reps: "1 min" },
+    // Utilities
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    const listEl = document.getElementById('exerciseList');
 
-      { day: "Wednesday", exercise: "Pilates + Pose Practice", sets: "-", reps: "-" },
-      { day: "Wednesday", exercise: "Vacuum Holds", sets: 3, reps: "30 sec" },
+    function renderExercises() {
+      listEl.innerHTML = '';
+      (plan[today] || []).forEach(ex => {
+        const card = document.createElement('div'); card.className='exercise-card';
+        card.innerHTML = `
+          <h2>${ex}</h2>
+          <div class="details">
+            <label>Sets/Reps</label><input type="text" id="rep_${ex}" placeholder="e.g. 4x12" />
+          </div>
+          <div class="details">
+            <label>Weight (kg)</label><input type="text" id="wt_${ex}" placeholder="e.g. 30" />
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
 
-      { day: "Thursday", exercise: "Leg Press (Low Weight)", sets: 3, reps: 12 },
-      { day: "Thursday", exercise: "Seated Leg Curl", sets: 3, reps: 12 },
-      { day: "Thursday", exercise: "Standing Calf Raises", sets: 3, reps: 15 },
-      { day: "Thursday", exercise: "Glute Kickbacks (Cable)", sets: 3, reps: 15 },
-      { day: "Thursday", exercise: "Cable Pallof Press", sets: 3, reps: 10 },
-      { day: "Thursday", exercise: "Bird-Dogs (on mat)", sets: 3, reps: 12 },
+    // Data persistence
+    function saveLog() {
+      const logs = JSON.parse(localStorage.getItem('workoutLogs')||'{}');
+      logs[today] = (plan[today]||[]).map(ex => ({
+        exercise: ex,
+        reps: document.getElementById(`rep_${ex}`).value,
+        weight: document.getElementById(`wt_${ex}`).value
+      }));
+      localStorage.setItem('workoutLogs', JSON.stringify(logs));
+      alert('Saved for ' + today);
+    }
 
-      { day: "Friday", exercise: "EZ Bar Curls (Seated)", sets: 3, reps: 10 },
-      { day: "Friday", exercise: "Cable Rope Hammer Curl", sets: 3, reps: 12 },
-      { day: "Friday", exercise: "Overhead Cable Tricep Extension", sets: 3, reps: 12 },
-      { day: "Friday", exercise: "Reverse-Grip Tricep Pushdowns", sets: 3, reps: 15 },
-      { day: "Friday", exercise: "Dumbbell Concentration Curl + Dips", sets: 3, reps: 10 },
+    // Dashboard
+    const modal = document.getElementById('dashboardModal');
+    const chartCtx = document.getElementById('progressChart').getContext('2d');
+    let progressChart;
 
-      { day: "Saturday", exercise: "Sauna + Mobility + Light Yoga", sets: "-", reps: "-" },
-      { day: "Sunday", exercise: "Rest or 6km walk", sets: "-", reps: "-" }
-    ];
+    function openDashboard() {
+      modal.style.display='flex';
+      renderChart('week');
+    }
+    function closeDashboard() { modal.style.display='none'; }
 
-    const tableBody = document.getElementById("exerciseTableBody");
-    plan.forEach(item => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${item.day}</td>
-        <td>${item.exercise}</td>
-        <td>${item.sets}</td>
-        <td>${item.reps}</td>
-        <td><input type="text" placeholder="e.g. 10/12/10" /></td>
-        <td><input type="text" placeholder="e.g. 30kg" /></td>
-      `;
-      tableBody.appendChild(row);
-    });
+    function renderChart(view) {
+      const logs = JSON.parse(localStorage.getItem('workoutLogs')||'{}');
+      const labels = Object.keys(logs).filter(d=>d).slice(-7);
+      const data = labels.map(d=> logs[d].length );
+      if(progressChart) progressChart.destroy();
+      progressChart = new Chart(chartCtx, {
+        type:'line', data:{ labels, datasets:[{ label:'Exercises Count', data, borderColor:var('--primary'), fill:false }] },
+        options:{ scales:{ y:{ beginAtZero:true } } }
+      });
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', saveLog);
+    document.getElementById('viewDashboard').addEventListener('click', openDashboard);
+    document.getElementById('closeModal').addEventListener('click', closeDashboard);
+    document.getElementById('viewSelect').addEventListener('change', e=>renderChart(e.target.value));
+
+    // Init
+    renderExercises();
   </script>
 </body>
 </html>
